@@ -5,215 +5,124 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Bettiah Interactive Map - Leaflet & OpenStreetMap</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <link rel="stylesheet" href="https://unpkg.com/leaflet-control-layers-inline@1.0.0/lib/leaflet-control-layers-inline.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: #f0f0f0;
-    }
-    #map {
-      height: 100vh;
-      width: 100%;
-      position: relative;
-    }
-    .info-box {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      background: white;
-      padding: 15px 20px;
-      border-radius: 8px;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-      z-index: 1000;
-      max-width: 300px;
-    }
-    .title {
-      font-size: 18px;
-      font-weight: bold;
-      color: #333;
-      margin-bottom: 10px;
-    }
-    .subtitle {
-      font-size: 13px;
-      color: #666;
-      line-height: 1.4;
-    }
-    .header {
-      position: fixed;
-      top: 10px;
-      left: 10px;
-      background: white;
-      padding: 15px;
-      border-radius: 8px;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-      z-index: 1000;
-      max-width: 350px;
-    }
-    .header h1 {
-      color: #2c3e50;
-      font-size: 20px;
-      margin-bottom: 5px;
-    }
-    .header p {
-      color: #666;
-      font-size: 12px;
-      margin: 3px 0;
-    }
-    .layer-control {
-      position: fixed;
-      top: 180px;
-      left: 10px;
-      background: white;
-      padding: 10px 15px;
-      border-radius: 8px;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-      z-index: 1000;
-    }
-    .layer-control label {
-      display: block;
-      margin: 8px 0;
-      cursor: pointer;
-      font-size: 13px;
-    }
-    .layer-control input {
-      margin-right: 8px;
-      cursor: pointer;
-    }
-    .layer-title {
-      font-weight: bold;
-      color: #2c3e50;
-      margin-bottom: 5px;
-      font-size: 13px;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f0f0f0; }
+    #map { height: 100vh; width: 100%; position: relative; }
+    .panel { position: fixed; background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.15); z-index: 1000; }
+    .control-panel { top: 10px; left: 10px; max-width: 350px; max-height: 90vh; overflow-y: auto; }
+    .control-panel h1 { color: #2c3e50; font-size: 20px; margin-bottom: 10px; }
+    .control-panel p { color: #666; font-size: 12px; margin: 3px 0; }
+    .search-box { margin-top: 10px; padding: 8px; border: 1px solid #ddd; border-radius: 4px; width: 100%; font-size: 13px; }
+    .search-box:focus { outline: none; border-color: #3498db; box-shadow: 0 0 5px rgba(52,152,219,0.3); }
+    .filter-section { margin-top: 12px; }
+    .filter-title { font-weight: bold; font-size: 12px; color: #2c3e50; margin-bottom: 8px; }
+    .filter-section label { display: block; margin: 5px 0; cursor: pointer; font-size: 12px; }
+    .filter-section input { margin-right: 6px; cursor: pointer; }
+    .info-box { bottom: 20px; right: 20px; max-width: 300px; }
+    .info-box .title { font-size: 18px; font-weight: bold; color: #333; margin-bottom: 10px; }
+    .info-box .subtitle { font-size: 13px; color: #666; line-height: 1.4; }
+    .location-count { top: 410px; left: 10px; font-size: 12px; color: #555; font-weight: bold; padding: 10px 15px; }
   </style>
 </head>
 <body>
   <div id="map"></div>
-  
-  <div class="header">
-    <h1>Bettiah Interactive Map</h1>
-    <p>📍 Location: West Champaran District, Bihar, India</p>
-    <p>🔍 Coordinates: 26.8039° N, 84.5022° E</p>
-    <p>Built with Leaflet & OpenStreetMap</p>
-  </div>
-
-  <div class="layer-control">
-    <div class="layer-title">📡 Map Layers</div>
-    <label><input type="radio" name="layer" value="osm" checked> Street Map</label>
-    <label><input type="radio" name="layer" value="satellite"> Satellite View</label>
-  </div>
-  
-  <div class="info-box">
-    <div class="title">About Bettiah</div>
-    <div class="subtitle">
-      Bettiah is a town and administrative headquarters of West Champaran district in Bihar. Known for agricultural production, historical heritage, and its role in India's independence movement (Champaran Satyagraha).
+  <div class="panel control-panel">
+    <h1>Bettiah Map</h1>
+    <p>📍 West Champaran, Bihar, India</p>
+    <input type="text" id="searchBox" class="search-box" placeholder="🔍 Search locations...">
+    <div class="filter-section">
+      <div class="filter-title">📁 Filter by Category</div>
+      <label><input type="checkbox" class="category-checkbox" value="admin"> Government</label>
+      <label><input type="checkbox" class="category-checkbox" value="heritage"> Heritage</label>
+      <label><input type="checkbox" class="category-checkbox" value="religious"> Religious</label>
+      <label><input type="checkbox" class="category-checkbox" value="nature"> Nature</label>
+      <label><input type="checkbox" class="category-checkbox" value="commerce"> Commerce</label>
+      <label><input type="checkbox" class="category-checkbox" value="agriculture"> Agriculture</label>
+      <label><input type="checkbox" class="category-checkbox" value="education"> Education</label>
+      <label><input type="checkbox" class="category-checkbox" value="healthcare"> Healthcare</label>
+      <label><input type="checkbox" class="category-checkbox" value="wildlife"> Wildlife</label>
+      <label><input type="checkbox" class="category-checkbox" value="infrastructure"> Infrastructure</label>
+    </div>
+    <div class="filter-section">
+      <div class="filter-title">📡 Map Layers</div>
+      <label><input type="radio" name="layer" value="osm" checked> Street Map</label>
+      <label><input type="radio" name="layer" value="satellite"> Satellite View</label>
     </div>
   </div>
-
+  <div class="panel location-count" id="locationCount">📍 Showing 20 locations</div>
+  <div class="panel info-box">
+    <div class="title">About Bettiah</div>
+    <div class="subtitle">Bettiah is the administrative headquarters of West Champaran district in Bihar. Known for agricultural production, historical heritage, and its role in India's independence movement.</div>
+  </div>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script>
-    // Initialize the map centered on Bettiah
-    const map = L.map('map').setView([26.8039, 84.5022], 13);
-    
-    // Define tile layers
-    const osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-      maxZoom: 19,
-      minZoom: 2
-    });
-    
-    const satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-      attribution: 'Tiles &copy; Esri',
-      maxZoom: 19,
-      minZoom: 2
-    });
-    
-    // Add default layer
-    osmLayer.addTo(map);
-    
-    // Layer switcher
-    document.querySelectorAll('input[name="layer"]').forEach(radio => {
-      radio.addEventListener('change', (e) => {
-        if (e.target.value === 'satellite') {
-          map.removeLayer(osmLayer);
-          satelliteLayer.addTo(map);
-        } else {
-          map.removeLayer(satelliteLayer);
-          osmLayer.addTo(map);
-        }
-      });
-    });
-    
-    // Define comprehensive markers for Bettiah locations
-    const locations = [
-      { name: 'Bettiah Town Center', lat: 26.8039, lng: 84.5022, description: 'Administrative headquarters of West Champaran', icon: '🏛️', type: 'admin' },
-      { name: 'Bettiah Raj Palace', lat: 26.8050, lng: 84.5010, description: 'Historic palace built 1627 AD, architectural marvel of Mughal era', icon: '🏰', type: 'heritage' },
-      { name: 'Triveni Ghat', lat: 26.8080, lng: 84.4990, description: 'Confluence of Gandak, Panchanand & Sonaha rivers, pilgrimage site', icon: '🕉️', type: 'religious' },
-      { name: 'Agricultural Hub', lat: 26.7980, lng: 84.5100, description: 'Major agricultural production area for wheat & sugarcane', icon: '🌾', type: 'agriculture' },
-      { name: 'Bettiah Market', lat: 26.8020, lng: 84.5040, description: 'Traditional market for local goods & commercial center', icon: '🏪', type: 'commerce' },
-      { name: 'Bhitiharwa Ashram', lat: 26.75, lng: 84.48, description: 'Historic ashram where Mahatma Gandhi stayed during Champaran Satyagraha', icon: '🙏', type: 'heritage' },
-      { name: 'Kalibagh Temple', lat: 26.81, lng: 84.49, description: 'Historic temple built 400 years ago (1614 AD) by royal family', icon: '⛪', type: 'religious' },
-      { name: 'Raj Deorhi (Palace Complex)', lat: 26.805, lng: 84.500, description: 'Historic palace complex with clock tower, former residence of Maharaja', icon: '🏛️', type: 'heritage' },
-      { name: 'District Collectorate', lat: 26.803, lng: 84.502, description: 'Government administrative office', icon: '🏢', type: 'admin' },
-      { name: 'Sagar Pokhra', lat: 26.82, lng: 84.50, description: 'Beautiful lake and scenic park, bird sanctuary', icon: '🦆', type: 'nature' },
-      { name: 'Uttarwari Pokhara', lat: 26.815, lng: 84.505, description: 'Historic pond in northern part of Bettiah', icon: '💧', type: 'nature' },
-      { name: 'Saraiya Man Lake', lat: 26.795, lng: 84.515, description: 'Beautiful lake 6km from town, famous for bird watching', icon: '🌊', type: 'nature' },
-      { name: 'Christian Quarters', lat: 26.808, lng: 84.498, description: 'Historic Christian colony established by Italian Capuchin priests (1740)', icon: '✝️', type: 'heritage' },
-      { name: 'Badi Masjid (Jangi Masjid)', lat: 26.810, lng: 84.505, description: 'Historic mosque, tallest building of Bettiah', icon: '🕌', type: 'religious' },
-      { name: 'MJK College Pokhara', lat: 26.800, lng: 84.510, description: 'Educational institution and scenic pond area', icon: '🎓', type: 'education' },
-      { name: 'Saheed Smarak (Martyr Memorial)', lat: 26.825, lng: 84.500, description: 'Memorial dedicated to freedom fighters', icon: '🇮🇳', type: 'heritage' },
-      { name: 'Valmiki Nagar Dam', lat: 26.68, lng: 84.45, description: 'Gandak Project dam 60km away, hydroelectric power plant & tourist spot', icon: '🏗️', type: 'infrastructure' },
-      { name: 'Udaypur Wildlife Sanctuary', lat: 26.72, lng: 84.40, description: 'Wildlife sanctuary near Bettiah for nature lovers', icon: '🦁', type: 'wildlife' },
-      { name: 'Hajarimal Dharmshala', lat: 26.805, lng: 84.515, description: 'Religious guest house and community center', icon: '🏘️', type: 'religious' },
-      { name: 'District Hospital', lat: 26.804, lng: 84.508, description: 'Government medical facility serving West Champaran', icon: '🏥', type: 'healthcare' }
-    ];
-    
-    // Add markers to the map
-    locations.forEach(location => {
-      const marker = L.marker([location.lat, location.lng], {
-        title: location.name
-      }).addTo(map);
-      
-      marker.bindPopup(`
-        <div style="width: 280px; font-family: Arial, sans-serif;">
-          <h3 style="margin: 0 0 8px 0; color: #2c3e50; font-size: 15px;">${location.icon} ${location.name}</h3>
-          <p style="margin: 0 0 8px 0; color: #555; font-size: 13px;">${location.description}</p>
-          <p style="margin: 0 0 5px 0; color: #888; font-size: 11px;">
-            <strong>Type:</strong> ${location.type.charAt(0).toUpperCase() + location.type.slice(1)}
-          </p>
-          <p style="margin: 0; color: #999; font-size: 11px;">
-            <strong>Coordinates:</strong> ${location.lat.toFixed(4)}°N, ${location.lng.toFixed(4)}°E
-          </p>
-        </div>
-      `);
-    });
-    
-    // Add a circle to show Bettiah urban area
-    L.circle([26.8039, 84.5022], {
-      color: '#3498db',
-      fillColor: '#3498db',
-      fillOpacity: 0.1,
-      radius: 5000,
-      weight: 2
-    }).addTo(map).bindPopup('Bettiah Urban Area (5km radius)');
-    
-    // Add custom controls/info panel
-    const info = L.control({position: 'topleft'});
-    info.onAdd = function(map) {
-      this._div = L.DomUtil.create('div', 'info');
-      this._div.innerHTML = '<h4 style="margin: 0; padding: 5px; background: #3498db; color: white; border-radius: 4px 4px 0 0;">🗺️ Map Controls</h4><p style="padding: 10px; margin: 0; background: white; border-radius: 0 0 4px 4px; font-size: 12px;">Zoom: +/- buttons or scroll | Pan: Click & drag | Markers: Click for details | Layers: Choose above</p>';
-      return this._div;
-    };
-    
-    // Handle window resize
-    window.addEventListener('resize', () => {
-      map.invalidateSize();
-    });
+  <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
+  <script>const map = L.map('map').setView([26.8039, 84.5022], 13);
+const osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap', maxZoom: 19, minZoom: 2 });
+const satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { attribution: 'Esri', maxZoom: 19, minZoom: 2 });
+osmLayer.addTo(map);
+document.querySelectorAll('input[name="layer"]').forEach(radio => {
+  radio.addEventListener('change', (e) => {
+    if (e.target.value === 'satellite') { map.removeLayer(osmLayer); satelliteLayer.addTo(map); }
+    else { map.removeLayer(satelliteLayer); osmLayer.addTo(map); }
+  });
+});
+const locations = [
+  { name: 'Bettiah Town Center', lat: 26.8039, lng: 84.5022, description: 'Admin headquarters', icon: '🏛️', type: 'admin' },
+  { name: 'Bettiah Raj Palace', lat: 26.8050, lng: 84.5010, description: 'Historic palace 1627', icon: '🏰', type: 'heritage' },
+  { name: 'Triveni Ghat', lat: 26.8080, lng: 84.4990, description: 'River confluence', icon: '🕉️', type: 'religious' },
+  { name: 'Agricultural Hub', lat: 26.7980, lng: 84.5100, description: 'Farm area', icon: '🌾', type: 'agriculture' },
+  { name: 'Bettiah Market', lat: 26.8020, lng: 84.5040, description: 'Traditional market', icon: '🏪', type: 'commerce' },
+  { name: 'Bhitiharwa Ashram', lat: 26.75, lng: 84.48, description: 'Gandhi site', icon: '🙏', type: 'heritage' },
+  { name: 'Kalibagh Temple', lat: 26.81, lng: 84.49, description: 'Old temple', icon: '⛪', type: 'religious' },
+  { name: 'Raj Deorhi', lat: 26.805, lng: 84.500, description: 'Palace complex', icon: '🏛️', type: 'heritage' },
+  { name: 'District Collectorate', lat: 26.803, lng: 84.502, description: 'Gov office', icon: '🏢', type: 'admin' },
+  { name: 'Sagar Pokhra', lat: 26.82, lng: 84.50, description: 'Lake & park', icon: '🦆', type: 'nature' },
+  { name: 'Uttarwari Pokhara', lat: 26.815, lng: 84.505, description: 'Historic pond', icon: '💧', type: 'nature' },
+  { name: 'Saraiya Man Lake', lat: 26.795, lng: 84.515, description: 'Bird watching lake', icon: '🌊', type: 'nature' },
+  { name: 'Christian Quarters', lat: 26.808, lng: 84.498, description: 'Historic colony', icon: '✝️', type: 'heritage' },
+  { name: 'Badi Masjid', lat: 26.810, lng: 84.505, description: 'Historic mosque', icon: '🕌', type: 'religious' },
+  { name: 'MJK College Pokhara', lat: 26.800, lng: 84.510, description: 'College & pond', icon: '🎓', type: 'education' },
+  { name: 'Saheed Smarak', lat: 26.825, lng: 84.500, description: 'Freedom memorial', icon: '🇮🇳', type: 'heritage' },
+  { name: 'Valmiki Nagar Dam', lat: 26.68, lng: 84.45, description: 'Dam & power', icon: '🏗️', type: 'infrastructure' },
+  { name: 'Udaypur Wildlife', lat: 26.72, lng: 84.40, description: 'Sanctuary', icon: '🦁', type: 'wildlife' },
+  { name: 'Hajarimal Dharmshala', lat: 26.805, lng: 84.515, description: 'Guest house', icon: '🏘️', type: 'religious' },
+  { name: 'District Hospital', lat: 26.804, lng: 84.508, description: 'Hospital', icon: '🏥', type: 'healthcare' }
+];
+let allMarkers = {};
+let markerClusterGroup = L.markerClusterGroup();
+function createMarker(loc) {
+  const m = L.marker([loc.lat, loc.lng]);
+  const pop = `<div style="width:250px;font-size:12px"><h3 style="color:#2c3e50">${loc.icon} ${loc.name}</h3><p>${loc.description}</p><p><b>Type:</b> ${loc.type}<br><b>Coords:</b> ${loc.lat.toFixed(3)}°N, ${loc.lng.toFixed(3)}°E</p></div>`;
+  m.bindPopup(pop);
+  m.on('mouseover', function() { this.openPopup(); });
+  m.on('mouseout', function() { this.closePopup(); });
+  allMarkers[loc.name] = { marker: m, location: loc };
+  return m;
+}
+locations.forEach(loc => { createMarker(loc); markerClusterGroup.addLayer(allMarkers[loc.name].marker); });
+map.addLayer(markerClusterGroup);
+L.circle([26.8039, 84.5022], { color: '#3498db', fillColor: '#3498db', fillOpacity: 0.1, radius: 5000, weight: 2 }).addTo(map);
+const searchBox = document.getElementById('searchBox');
+const categoryCheckboxes = document.querySelectorAll('.category-checkbox');
+const locationCountDiv = document.getElementById('locationCount');
+function filterMarkers() {
+  const searchTerm = searchBox.value.toLowerCase();
+  const selectedCategories = Array.from(categoryCheckboxes).filter(cb => cb.checked).map(cb => cb.value);
+  markerClusterGroup.clearLayers();
+  let visibleCount = 0;
+  locations.forEach(loc => {
+    const matchesSearch = loc.name.toLowerCase().includes(searchTerm) || loc.description.toLowerCase().includes(searchTerm);
+    const matchesCategory = selectedCategories.length === 0 || selectedCategories.includes(loc.type);
+    if (matchesSearch && matchesCategory) { markerClusterGroup.addLayer(allMarkers[loc.name].marker); visibleCount++; }
+  });
+  locationCountDiv.textContent = `📍 Showing ${visibleCount} location${visibleCount !== 1 ? 's' : ''}`;
+}
+searchBox.addEventListener('input', filterMarkers);
+categoryCheckboxes.forEach(checkbox => { checkbox.addEventListener('change', filterMarkers); });
+window.addEventListener('resize', () => { map.invalidateSize(); });
   </script>
 </body>
 </html>
