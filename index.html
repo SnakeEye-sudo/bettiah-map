@@ -22,19 +22,20 @@
     .info-box.collapsed .title { font-size: 12px; margin: 0; writing-mode: vertical-rl; text-orientation: mixed; }
     .panel h1 { color: #2c3e50; font-size: 20px; margin-bottom: 10px; }
     .panel p { color: #666; font-size: 12px; margin: 3px 0; }
-    .toggle-btn { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: bold; margin-left: 5px; transition: all 0.3s ease; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-    .toggle-btn:hover { background: linear-gradient(135deg, #764ba2 0%, #667eea 100%); box-shadow: 0 4px 10px rgba(0,0,0,0.2); transform: scale(1.05); }
-    .toggle-btn:active { transform: scale(0.98); }
-    .search-box { margin-top: 10px; padding: 8px; border: 1px solid #ddd; border-radius: 4px; width: 100%; font-size: 13px; }
-    .search-box:focus { outline: none; border-color: #667eea; box-shadow: 0 0 5px rgba(102, 126, 234, 0.3); }
+    .toggle-btn { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: bold; margin-left: 5px; transition: all 0.3s ease; box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3); display: flex; align-items: center; justify-content: center; min-width: 36px; }
+    .toggle-btn:hover { background: linear-gradient(135deg, #764ba2 0%, #667eea 100%); box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4); transform: scale(1.08); }
+    .toggle-btn:active { transform: scale(0.95); }
+    .search-box { margin-top: 10px; padding: 10px; border: 1px solid #ddd; border-radius: 4px; width: 100%; font-size: 13px; transition: border-color 0.3s ease, box-shadow 0.3s ease; }
+    .search-box:focus { outline: none; border-color: #667eea; box-shadow: 0 0 8px rgba(102, 126, 234, 0.4); }
     .filter-section { margin-top: 12px; }
     .filter-title { font-weight: bold; font-size: 12px; color: #2c3e50; margin-bottom: 8px; }
-    .filter-section label { display: block; margin: 5px 0; cursor: pointer; font-size: 12px; }
+    .filter-section label { display: block; margin: 5px 0; cursor: pointer; font-size: 12px; transition: color 0.2s ease; }
+    .filter-section label:hover { color: #667eea; }
     .filter-section input { margin-right: 6px; cursor: pointer; }
-    .location-count { top: 440px; left: 10px; font-size: 12px; color: #555; font-weight: bold; padding: 10px 15px; background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%); border-left: 3px solid #667eea; }
+    .location-count { top: 440px; left: 10px; font-size: 13px; color: #555; font-weight: bold; padding: 12px 18px; background: linear-gradient(135deg, rgba(102, 126, 234, 0.15) 0%, rgba(118, 75, 162, 0.15) 100%); border-left: 4px solid #667eea; border-radius: 4px; box-shadow: 0 2px 6px rgba(0,0,0,0.08); }
     .title { font-size: 18px; font-weight: bold; color: #333; margin-bottom: 10px; }
     .subtitle { font-size: 13px; color: #666; line-height: 1.4; }
-    .panel-header { display: flex; justify-content: space-between; align-items: center; }
+    .panel-header { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
   </style>
 </head>
 <body>
@@ -42,7 +43,7 @@
   <div class="panel control-panel" id="controlPanel">
     <div class="panel-header">
       <h1>Bettiah Map</h1>
-      <button class="toggle-btn" onclick="togglePanel('controlPanel')" title="Minimize/Expand">−</button>
+      <button class="toggle-btn" onclick="togglePanel('controlPanel')" title="Minimize/Expand">⋯</button>
     </div>
     <div class="control-content">
       <p style="color: #666; font-size: 12px; margin: 8px 0;">📍 West Champaran, Bihar, India</p>
@@ -73,7 +74,7 @@
   <div class="panel info-box" id="infoBox">
     <div class="panel-header">
       <div class="title">About Bettiah</div>
-      <button class="toggle-btn" onclick="togglePanel('infoBox')" title="Minimize/Expand">−</button>
+      <button class="toggle-btn" onclick="togglePanel('infoBox')" title="Minimize/Expand">⋯</button>
     </div>
     <div class="info-content">
       <div class="subtitle">Bettiah is the administrative headquarters of West Champaran district in Bihar. Known for agricultural production, historical heritage, and its role in India's independence movement (Champaran Satyagraha).</div>
@@ -81,6 +82,152 @@
   </div>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
-  <script>function togglePanel(pid){document.getElementById(pid).classList.toggle('collapsed');}const map=L.map('map').setView([26.8039,84.5022],13);const osmLayer=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'OpenStreetMap',maxZoom:19});const satelliteLayer=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{attribution:'Esri',maxZoom:19});osmLayer.addTo(map);document.querySelectorAll('input[name="layer"]').forEach(r=>{r.addEventListener('change',e=>{e.target.value==='satellite'?(map.removeLayer(osmLayer),satelliteLayer.addTo(map)):(map.removeLayer(satelliteLayer),osmLayer.addTo(map))});});const locations=[{name:'Bettiah Town Center',lat:26.8039,lng:84.5022,d:'Admin HQ',icon:'🏛️',type:'admin'},{name:'Bettiah Raj Palace',lat:26.8050,lng:84.5010,d:'Palace 1627',icon:'🏰',type:'heritage'},{name:'Triveni Ghat',lat:26.8080,lng:84.4990,d:'River conf',icon:'🕉️',type:'religious'},{name:'Agricultural Hub',lat:26.7980,lng:84.5100,d:'Farm area',icon:'🌾',type:'agriculture'},{name:'Bettiah Market',lat:26.8020,lng:84.5040,d:'Market',icon:'🏪',type:'commerce'},{name:'Bhitiharwa Ashram',lat:26.75,lng:84.48,d:'Gandhi',icon:'🙏',type:'heritage'},{name:'Kalibagh Temple',lat:26.81,lng:84.49,d:'Temple',icon:'⛪',type:'religious'},{name:'Raj Deorhi',lat:26.805,lng:84.50,d:'Palace',icon:'🏛️',type:'heritage'},{name:'District Collectorate',lat:26.803,lng:84.502,d:'Govt',icon:'🏢',type:'admin'},{name:'Sagar Pokhra',lat:26.82,lng:84.50,d:'Lake',icon:'🦆',type:'nature'},{name:'Uttarwari Pokhara',lat:26.815,lng:84.505,d:'Pond',icon:'💧',type:'nature'},{name:'Saraiya Lake',lat:26.795,lng:84.515,d:'Bird watching',icon:'🌊',type:'nature'},{name:'Christian Quarters',lat:26.808,lng:84.498,d:'Colony',icon:'✝️',type:'heritage'},{name:'Badi Masjid',lat:26.810,lng:84.505,d:'Mosque',icon:'🕌',type:'religious'},{name:'MJK College',lat:26.800,lng:84.510,d:'College',icon:'🎓',type:'education'},{name:'Saheed Smarak',lat:26.825,lng:84.500,d:'Memorial',icon:'🇮🇳',type:'heritage'},{name:'Valmiki Dam',lat:26.68,lng:84.45,d:'Dam',icon:'🏗️',type:'infrastructure'},{name:'Udaypur Wildlife',lat:26.72,lng:84.40,d:'Sanctuary',icon:'🦁',type:'wildlife'},{name:'Hajarimal Dharmshala',lat:26.805,lng:84.515,d:'Ashram',icon:'🏘️',type:'religious'},{name:'District Hospital',lat:26.804,lng:84.508,d:'Hospital',icon:'🏥',type:'healthcare'},{name:'Lauriya Stupa',lat:26.66,lng:84.37,d:'Buddhist',icon:'🗿',type:'archaeological'},{name:'Ashoka Pillar',lat:27.27,lng:84.50,d:'Pillar',icon:'📍',type:'historical'},{name:'Gandhi Ashram',lat:26.68,lng:84.75,d:'Satyagraha',icon:'🙋',type:'historical'},{name:'Kesariya Stupa',lat:26.33,lng:84.85,d:'Tallest',icon:'🗿',type:'archaeological'},{name:'Chhawani Well',lat:26.80,lng:84.50,d:'Well',icon:'🚨',type:'heritage'},{name:'Mahanawa Ghat',lat:26.78,lng:84.49,d:'Ghat',icon:'💧',type:'nature'},{name:'Sant Ghat',lat:26.79,lng:84.48,d:'Temple',icon:'⛪',type:'religious'},{name:'Durga Bagh',lat:26.81,lng:84.51,d:'Durga',icon:'⛪',type:'religious'},{name:'Maa Kali Mandir',lat:26.80,lng:84.50,d:'Kali',icon:'⛪',type:'religious'},{name:'Shiv Mandir',lat:26.82,lng:84.50,d:'Shiva',icon:'⛪',type:'religious'},{name:'Ram Janaki',lat:26.81,lng:84.49,d:'Rama',icon:'⛪',type:'religious'},{name:'Nara Devi',lat:26.80,lng:84.49,d:'Temple',icon:'⛪',type:'religious'},{name:'Gauri Shankar',lat:26.79,lng:84.48,d:'Shiva',icon:'⛪',type:'religious'},{name:'Govt Hospital',lat:26.80,lng:84.50,d:'Hospital',icon:'🏥',type:'healthcare'},{name:'Bettiah College',lat:26.81,lng:84.51,d:'College',icon:'🎓',type:'education'},{name:'Mission Park',lat:26.80,lng:84.51,d:'Park',icon:'🌳',type:'nature'},{name:'Maharani Park',lat:26.82,lng:84.50,d:'Park',icon:'🌳',type:'nature'},{name:'Railway Station',lat:26.81,lng:84.50,d:'Station',icon:'🚂',type:'infrastructure'},{name:'Bus Stand',lat:26.81,lng:84.49,d:'Bus',icon:'🚌',type:'infrastructure'},{name:'Bettiah Fort',lat:26.80,lng:84.50,d:'Fort',icon:'🏰',type:'historical'},{name:'Vrindavan Ashram',lat:26.79,lng:84.48,d:'Ashram',icon:'🙏',type:'religious'},{name:'Roop Vatika',lat:26.80,lng:84.51,d:'Garden',icon:'🌸',type:'nature'},{name:'Chandrawati',lat:26.78,lng:84.48,d:'River',icon:'💧',type:'nature'},{name:'Burhi Gandak',lat:26.75,lng:84.45,d:'River',icon:'💧',type:'nature'},{name:'Triveni',lat:26.81,lng:84.50,d:'Rivers',icon:'💧',type:'nature'},{name:'Saryaya Temple',lat:26.80,lng:84.53,d:'36 crore',icon:'⛪',type:'religious'},{name:'Lauria Araraj',lat:26.70,lng:84.38,d:'Pillar',icon:'📍',type:'historical'},{name:'Nandangarh',lat:26.66,lng:84.37,d:'Buddhist',icon:'🗿',type:'archaeological'},{name:'Museum',lat:26.80,lng:84.50,d:'Museum',icon:'🏛️',type:'education'},{name:'Market Square',lat:26.80,lng:84.50,d:'Market',icon:'🏪',type:'commerce'},{name:'Textile Market',lat:26.81,lng:84.49,d:'Clothes',icon:'👕',type:'commerce'},{name:'Fruit Market',lat:26.81,lng:84.50,d:'Fruits',icon:'🍏',type:'commerce'},{name:'Spice Market',lat:26.80,lng:84.49,d:'Spices',icon:'🌶️',type:'commerce'},{name:'Government School',lat:26.80,lng:84.50,d:'School',icon:'🎓',type:'education'},{name:'Medical College',lat:26.82,lng:84.51,d:'College',icon:'🎓',type:'education'},{name:'Industrial Area',lat:26.75,lng:84.55,d:'Factory',icon:'🏭',type:'infrastructure'},{name:'Civic Center',lat:26.81,lng:84.49,d:'Center',icon:'🏛️',type:'admin'},{name:'Police Station',lat:26.80,lng:84.50,d:'Police',icon:'👮',type:'admin'},{name:'Fire Station',lat:26.81,lng:84.50,d:'Fire',icon:'🚒',type:'admin'},{name:'Post Office',lat:26.80,lng:84.49,d:'Post',icon:'📮',type:'admin'},{name:'Bank',lat:26.81,lng:84.50,d:'Bank',icon:'🏦',type:'admin'},{name:'Vet Hospital',lat:26.79,lng:84.50,d:'Vet',icon:'🐕',type:'healthcare'},{name:'Pharmacy',lat:26.80,lng:84.50,d:'Medicine',icon:'🏪',type:'commerce'}];let mcg=L.markerClusterGroup({maxClusterRadius:60});locations.forEach(l=>{const m=L.marker([l.lat,l.lng]).bindPopup(`<div style='width:250px;font-size:12px'><h3 style='color:#2c3e50'>${l.icon} ${l.name}</h3><p>${l.d}</p><p><b>Type:</b> ${l.type}</p></div>`).on('mouseover',function(){this.openPopup();}).on('mouseout',function(){this.closePopup();});mcg.addLayer(m);});map.addLayer(mcg);L.circle([26.8039,84.5022],{color:'#3498db',fillColor:'#3498db',fillOpacity:0.1,radius:5000,weight:2}).addTo(map);const sb=document.getElementById('searchBox');const cc=document.querySelectorAll('.category-checkbox');const lc=document.getElementById('locationCount');function filterMarkers(){const st=sb.value.toLowerCase();const sc=Array.from(cc).filter(c=>c.checked).map(c=>c.value);mcg.clearLayers();let vc=0;locations.forEach(l=>{const ms=l.name.toLowerCase().includes(st)||l.d.toLowerCase().includes(st);const mc=sc.length===0||sc.includes(l.type);if(ms&&mc){mcg.addLayer(L.marker([l.lat,l.lng]).bindPopup(`<div style='width:250px;font-size:12px'><h3 style='color:#2c3e50'>${l.icon} ${l.name}</h3><p>${l.d}</p></div>`).on('mouseover',function(){this.openPopup();}).on('mouseout',function(){this.closePopup();}));vc++;}});lc.textContent=`📍 Showing ${vc} location${vc!==1?'s':''}`;}sb.addEventListener('input',filterMarkers);cc.forEach(c=>{c.addEventListener('change',filterMarkers);});window.addEventListener('resize',()=>{map.invalidateSize();}); </script>
+  <script>
+    function togglePanel(pid) {
+      const panel = document.getElementById(pid);
+      panel.classList.toggle('collapsed');
+    }
+
+    const map = L.map('map').setView([26.8039, 84.5022], 13);
+    const osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: 'OpenStreetMap', maxZoom: 19 });
+    const satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { attribution: 'Esri', maxZoom: 19 });
+    osmLayer.addTo(map);
+
+    document.querySelectorAll('input[name="layer"]').forEach(radio => {
+      radio.addEventListener('change', (e) => {
+        if (e.target.value === 'satellite') {
+          map.removeLayer(osmLayer);
+          satelliteLayer.addTo(map);
+        } else {
+          map.removeLayer(satelliteLayer);
+          osmLayer.addTo(map);
+        }
+      });
+    });
+
+    const locations = [
+      {name:'Bettiah Town Center',lat:26.8039,lng:84.5022,d:'Admin HQ',icon:'🏛️',type:'admin'},
+      {name:'Bettiah Raj Palace',lat:26.8050,lng:84.5010,d:'Palace 1627',icon:'🏰',type:'heritage'},
+      {name:'Triveni Ghat',lat:26.8080,lng:84.4990,d:'River conf',icon:'🕉️',type:'religious'},
+      {name:'Agricultural Hub',lat:26.7980,lng:84.5100,d:'Farm area',icon:'🌾',type:'agriculture'},
+      {name:'Bettiah Market',lat:26.8020,lng:84.5040,d:'Market',icon:'🏪',type:'commerce'},
+      {name:'Bhitiharwa Ashram',lat:26.75,lng:84.48,d:'Gandhi',icon:'🙏',type:'heritage'},
+      {name:'Kalibagh Temple',lat:26.81,lng:84.49,d:'Temple',icon:'⛪',type:'religious'},
+      {name:'Raj Deorhi',lat:26.805,lng:84.50,d:'Palace',icon:'🏛️',type:'heritage'},
+      {name:'District Collectorate',lat:26.803,lng:84.502,d:'Govt',icon:'🏢',type:'admin'},
+      {name:'Sagar Pokhra',lat:26.82,lng:84.50,d:'Lake',icon:'🦆',type:'nature'},
+      {name:'Uttarwari Pokhara',lat:26.815,lng:84.505,d:'Pond',icon:'💧',type:'nature'},
+      {name:'Saraiya Lake',lat:26.795,lng:84.515,d:'Bird watching',icon:'🌊',type:'nature'},
+      {name:'Christian Quarters',lat:26.808,lng:84.498,d:'Colony',icon:'✝️',type:'heritage'},
+      {name:'Badi Masjid',lat:26.810,lng:84.505,d:'Mosque',icon:'🕌',type:'religious'},
+      {name:'MJK College',lat:26.800,lng:84.510,d:'College',icon:'🎓',type:'education'},
+      {name:'Saheed Smarak',lat:26.825,lng:84.500,d:'Memorial',icon:'🇮🇳',type:'heritage'},
+      {name:'Valmiki Dam',lat:26.68,lng:84.45,d:'Dam',icon:'🏗️',type:'infrastructure'},
+      {name:'Udaypur Wildlife',lat:26.72,lng:84.40,d:'Sanctuary',icon:'🦁',type:'wildlife'},
+      {name:'Hajarimal Dharmshala',lat:26.805,lng:84.515,d:'Ashram',icon:'🏘️',type:'religious'},
+      {name:'District Hospital',lat:26.804,lng:84.508,d:'Hospital',icon:'🏥',type:'healthcare'},
+      {name:'Lauriya Stupa',lat:26.66,lng:84.37,d:'Buddhist',icon:'🗿',type:'archaeological'},
+      {name:'Ashoka Pillar',lat:27.27,lng:84.50,d:'Pillar',icon:'📍',type:'historical'},
+      {name:'Gandhi Ashram',lat:26.68,lng:84.75,d:'Satyagraha',icon:'🙋',type:'historical'},
+      {name:'Kesariya Stupa',lat:26.33,lng:84.85,d:'Tallest',icon:'🗿',type:'archaeological'},
+      {name:'Chhawani Well',lat:26.80,lng:84.50,d:'Well',icon:'🚨',type:'heritage'},
+      {name:'Mahanawa Ghat',lat:26.78,lng:84.49,d:'Ghat',icon:'💧',type:'nature'},
+      {name:'Sant Ghat',lat:26.79,lng:84.48,d:'Temple',icon:'⛪',type:'religious'},
+      {name:'Durga Bagh',lat:26.81,lng:84.51,d:'Durga',icon:'⛪',type:'religious'},
+      {name:'Maa Kali Mandir',lat:26.80,lng:84.50,d:'Kali',icon:'⛪',type:'religious'},
+      {name:'Shiv Mandir',lat:26.82,lng:84.50,d:'Shiva',icon:'⛪',type:'religious'},
+      {name:'Ram Janaki',lat:26.81,lng:84.49,d:'Rama',icon:'⛪',type:'religious'},
+      {name:'Nara Devi',lat:26.80,lng:84.49,d:'Temple',icon:'⛪',type:'religious'},
+      {name:'Gauri Shankar',lat:26.79,lng:84.48,d:'Shiva',icon:'⛪',type:'religious'},
+      {name:'Govt Hospital',lat:26.80,lng:84.50,d:'Hospital',icon:'🏥',type:'healthcare'},
+      {name:'Bettiah College',lat:26.81,lng:84.51,d:'College',icon:'🎓',type:'education'},
+      {name:'Mission Park',lat:26.80,lng:84.51,d:'Park',icon:'🌳',type:'nature'},
+      {name:'Maharani Park',lat:26.82,lng:84.50,d:'Park',icon:'🌳',type:'nature'},
+      {name:'Railway Station',lat:26.81,lng:84.50,d:'Station',icon:'🚂',type:'infrastructure'},
+      {name:'Bus Stand',lat:26.81,lng:84.49,d:'Bus',icon:'🚌',type:'infrastructure'},
+      {name:'Bettiah Fort',lat:26.80,lng:84.50,d:'Fort',icon:'🏰',type:'historical'},
+      {name:'Vrindavan Ashram',lat:26.79,lng:84.48,d:'Ashram',icon:'🙏',type:'religious'},
+      {name:'Roop Vatika',lat:26.80,lng:84.51,d:'Garden',icon:'🌸',type:'nature'},
+      {name:'Chandrawati',lat:26.78,lng:84.48,d:'River',icon:'💧',type:'nature'},
+      {name:'Burhi Gandak',lat:26.75,lng:84.45,d:'River',icon:'💧',type:'nature'},
+      {name:'Triveni',lat:26.81,lng:84.50,d:'Rivers',icon:'💧',type:'nature'},
+      {name:'Saryaya Temple',lat:26.80,lng:84.53,d:'36 crore',icon:'⛪',type:'religious'},
+      {name:'Lauria Araraj',lat:26.70,lng:84.38,d:'Pillar',icon:'📍',type:'historical'},
+      {name:'Nandangarh',lat:26.66,lng:84.37,d:'Buddhist',icon:'🗿',type:'archaeological'},
+      {name:'Museum',lat:26.80,lng:84.50,d:'Museum',icon:'🏛️',type:'education'},
+      {name:'Market Square',lat:26.80,lng:84.50,d:'Market',icon:'🏪',type:'commerce'},
+      {name:'Textile Market',lat:26.81,lng:84.49,d:'Clothes',icon:'👕',type:'commerce'},
+      {name:'Fruit Market',lat:26.81,lng:84.50,d:'Fruits',icon:'🍏',type:'commerce'},
+      {name:'Spice Market',lat:26.80,lng:84.49,d:'Spices',icon:'🌶️',type:'commerce'},
+      {name:'Government School',lat:26.80,lng:84.50,d:'School',icon:'🎓',type:'education'},
+      {name:'Medical College',lat:26.82,lng:84.51,d:'College',icon:'🎓',type:'education'},
+      {name:'Industrial Area',lat:26.75,lng:84.55,d:'Factory',icon:'🏭',type:'infrastructure'},
+      {name:'Civic Center',lat:26.81,lng:84.49,d:'Center',icon:'🏛️',type:'admin'},
+      {name:'Police Station',lat:26.80,lng:84.50,d:'Police',icon:'👮',type:'admin'},
+      {name:'Fire Station',lat:26.81,lng:84.50,d:'Fire',icon:'🚒',type:'admin'},
+      {name:'Post Office',lat:26.80,lng:84.49,d:'Post',icon:'📮',type:'admin'},
+      {name:'Bank',lat:26.81,lng:84.50,d:'Bank',icon:'🏦',type:'admin'},
+      {name:'Vet Hospital',lat:26.79,lng:84.50,d:'Vet',icon:'🐕',type:'healthcare'},
+      {name:'Pharmacy',lat:26.80,lng:84.50,d:'Medicine',icon:'🏪',type:'commerce'}
+    ];
+
+    let mcg = L.markerClusterGroup({ maxClusterRadius: 60 });
+    locations.forEach(loc => {
+      const marker = L.marker([loc.lat, loc.lng])
+        .bindPopup(`<div style='width:250px;font-size:12px'><h3 style='color:#2c3e50'>${loc.icon} ${loc.name}</h3><p>${loc.d}</p><p><b>Type:</b> ${loc.type}</p></div>`)
+        .on('mouseover', function() { this.openPopup(); })
+        .on('mouseout', function() { this.closePopup(); });
+      mcg.addLayer(marker);
+    });
+    map.addLayer(mcg);
+
+    L.circle([26.8039, 84.5022], {
+      color: '#3498db',
+      fillColor: '#3498db',
+      fillOpacity: 0.1,
+      radius: 5000,
+      weight: 2
+    }).addTo(map);
+
+    const searchBox = document.getElementById('searchBox');
+    const categoryCheckboxes = document.querySelectorAll('.category-checkbox');
+    const locationCount = document.getElementById('locationCount');
+
+    function filterMarkers() {
+      const searchTerm = searchBox.value.toLowerCase();
+      const selectedCategories = Array.from(categoryCheckboxes)
+        .filter(cb => cb.checked)
+        .map(cb => cb.value);
+
+      mcg.clearLayers();
+      let visibleCount = 0;
+
+      locations.forEach(loc => {
+        const matchesSearch = loc.name.toLowerCase().includes(searchTerm) || loc.d.toLowerCase().includes(searchTerm);
+        const matchesCategory = selectedCategories.length === 0 || selectedCategories.includes(loc.type);
+
+        if (matchesSearch && matchesCategory) {
+          mcg.addLayer(
+            L.marker([loc.lat, loc.lng])
+              .bindPopup(`<div style='width:250px;font-size:12px'><h3 style='color:#2c3e50'>${loc.icon} ${loc.name}</h3><p>${loc.d}</p></div>`)
+              .on('mouseover', function() { this.openPopup(); })
+              .on('mouseout', function() { this.closePopup(); })
+          );
+          visibleCount++;
+        }
+      });
+
+      locationCount.textContent = `📍 Showing ${visibleCount} location${visibleCount !== 1 ? 's' : ''}`;
+    }
+
+    searchBox.addEventListener('input', filterMarkers);
+    categoryCheckboxes.forEach(cb => {
+      cb.addEventListener('change', filterMarkers);
+    });
+
+    window.addEventListener('resize', () => {
+      map.invalidateSize();
+    });
+  </script>
 </body>
 </html>
