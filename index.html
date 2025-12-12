@@ -32,10 +32,11 @@
     .filter-section label { display: block; margin: 5px 0; cursor: pointer; font-size: 12px; transition: color 0.2s ease; }
     .filter-section label:hover { color: #667eea; }
     .filter-section input { margin-right: 6px; cursor: pointer; }
-    .location-count { top: 440px; left: 10px; font-size: 13px; color: #555; font-weight: bold; padding: 12px 18px; background: linear-gradient(135deg, rgba(102, 126, 234, 0.15) 0%, rgba(118, 75, 162, 0.15) 100%); border-left: 4px solid #667eea; border-radius: 4px; box-shadow: 0 2px 6px rgba(0,0,0,0.08); }
+    .location-count { display: none; }
     .title { font-size: 18px; font-weight: bold; color: #333; margin-bottom: 10px; }
     .subtitle { font-size: 13px; color: #666; line-height: 1.4; }
     .panel-header { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+    .leaflet-tile-pane img { image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges; }
   </style>
 </head>
 <body>
@@ -70,7 +71,6 @@
       </div>
     </div>
   </div>
-  <div class="panel location-count" id="locationCount">📍 Showing 60 locations</div>
   <div class="panel info-box" id="infoBox">
     <div class="panel-header">
       <div class="title">About Bettiah</div>
@@ -84,13 +84,24 @@
   <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
   <script>
     function togglePanel(pid) {
-      const panel = document.getElementById(pid);
-      panel.classList.toggle('collapsed');
+      document.getElementById(pid).classList.toggle('collapsed');
     }
 
     const map = L.map('map').setView([26.8039, 84.5022], 13);
-    const osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: 'OpenStreetMap', maxZoom: 19 });
-    const satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { attribution: 'Esri', maxZoom: 19 });
+    
+    const osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: 'OpenStreetMap',
+      maxZoom: 19,
+      minZoom: 2,
+      errorTileUrl: 'data:image/svg+xml;utf8,<svg></svg>'
+    });
+    
+    const satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+      attribution: 'Esri',
+      maxZoom: 18,
+      minZoom: 2
+    });
+    
     osmLayer.addTo(map);
 
     document.querySelectorAll('input[name="layer"]').forEach(radio => {
@@ -191,7 +202,6 @@
 
     const searchBox = document.getElementById('searchBox');
     const categoryCheckboxes = document.querySelectorAll('.category-checkbox');
-    const locationCount = document.getElementById('locationCount');
 
     function filterMarkers() {
       const searchTerm = searchBox.value.toLowerCase();
@@ -200,7 +210,6 @@
         .map(cb => cb.value);
 
       mcg.clearLayers();
-      let visibleCount = 0;
 
       locations.forEach(loc => {
         const matchesSearch = loc.name.toLowerCase().includes(searchTerm) || loc.d.toLowerCase().includes(searchTerm);
@@ -213,11 +222,8 @@
               .on('mouseover', function() { this.openPopup(); })
               .on('mouseout', function() { this.closePopup(); })
           );
-          visibleCount++;
         }
       });
-
-      locationCount.textContent = `📍 Showing ${visibleCount} location${visibleCount !== 1 ? 's' : ''}`;
     }
 
     searchBox.addEventListener('input', filterMarkers);
