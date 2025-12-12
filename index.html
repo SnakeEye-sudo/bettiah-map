@@ -32,7 +32,6 @@
     .filter-section label { display: block; margin: 5px 0; cursor: pointer; font-size: 12px; transition: color 0.2s ease; }
     .filter-section label:hover { color: #667eea; }
     .filter-section input { margin-right: 6px; cursor: pointer; }
-    .location-count { display: none; }
     .title { font-size: 18px; font-weight: bold; color: #333; margin-bottom: 10px; }
     .subtitle { font-size: 13px; color: #666; line-height: 1.4; }
     .panel-header { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
@@ -87,7 +86,7 @@
       document.getElementById(pid).classList.toggle('collapsed');
     }
 
-    const map = L.map('map').setView([26.8039, 84.5022], 13);
+    const map = L.map('map').setView([26.80229, 84.50311], 13);
     
     const osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: 'OpenStreetMap',
@@ -117,69 +116,31 @@
     });
 
     const locations = [
-      {name:'Bettiah Town Center',lat:26.8039,lng:84.5022,d:'Admin HQ',icon:'🏛️',type:'admin'},
-      {name:'Bettiah Raj Palace',lat:26.8050,lng:84.5010,d:'Palace 1627',icon:'🏰',type:'heritage'},
-      {name:'Triveni Ghat',lat:26.8080,lng:84.4990,d:'River conf',icon:'🕉️',type:'religious'},
-      {name:'Agricultural Hub',lat:26.7980,lng:84.5100,d:'Farm area',icon:'🌾',type:'agriculture'},
-      {name:'Bettiah Market',lat:26.8020,lng:84.5040,d:'Market',icon:'🏪',type:'commerce'},
-      {name:'Bhitiharwa Ashram',lat:26.75,lng:84.48,d:'Gandhi',icon:'🙏',type:'heritage'},
-      {name:'Kalibagh Temple',lat:26.81,lng:84.49,d:'Temple',icon:'⛪',type:'religious'},
-      {name:'Raj Deorhi',lat:26.805,lng:84.50,d:'Palace',icon:'🏛️',type:'heritage'},
-      {name:'District Collectorate',lat:26.803,lng:84.502,d:'Govt',icon:'🏢',type:'admin'},
-      {name:'Sagar Pokhra',lat:26.82,lng:84.50,d:'Lake',icon:'🦆',type:'nature'},
-      {name:'Uttarwari Pokhara',lat:26.815,lng:84.505,d:'Pond',icon:'💧',type:'nature'},
-      {name:'Saraiya Lake',lat:26.795,lng:84.515,d:'Bird watching',icon:'🌊',type:'nature'},
-      {name:'Christian Quarters',lat:26.808,lng:84.498,d:'Colony',icon:'✝️',type:'heritage'},
-      {name:'Badi Masjid',lat:26.810,lng:84.505,d:'Mosque',icon:'🕌',type:'religious'},
-      {name:'MJK College',lat:26.800,lng:84.510,d:'College',icon:'🎓',type:'education'},
-      {name:'Saheed Smarak',lat:26.825,lng:84.500,d:'Memorial',icon:'🇮🇳',type:'heritage'},
-      {name:'Valmiki Dam',lat:26.68,lng:84.45,d:'Dam',icon:'🏗️',type:'infrastructure'},
-      {name:'Udaypur Wildlife',lat:26.72,lng:84.40,d:'Sanctuary',icon:'🦁',type:'wildlife'},
-      {name:'Hajarimal Dharmshala',lat:26.805,lng:84.515,d:'Ashram',icon:'🏘️',type:'religious'},
-      {name:'District Hospital',lat:26.804,lng:84.508,d:'Hospital',icon:'🏥',type:'healthcare'},
-      {name:'Lauriya Stupa',lat:26.66,lng:84.37,d:'Buddhist',icon:'🗿',type:'archaeological'},
-      {name:'Ashoka Pillar',lat:27.27,lng:84.50,d:'Pillar',icon:'📍',type:'historical'},
-      {name:'Gandhi Ashram',lat:26.68,lng:84.75,d:'Satyagraha',icon:'🙋',type:'historical'},
-      {name:'Kesariya Stupa',lat:26.33,lng:84.85,d:'Tallest',icon:'🗿',type:'archaeological'},
-      {name:'Chhawani Well',lat:26.80,lng:84.50,d:'Well',icon:'🚨',type:'heritage'},
-      {name:'Mahanawa Ghat',lat:26.78,lng:84.49,d:'Ghat',icon:'💧',type:'nature'},
-      {name:'Sant Ghat',lat:26.79,lng:84.48,d:'Temple',icon:'⛪',type:'religious'},
-      {name:'Durga Bagh',lat:26.81,lng:84.51,d:'Durga',icon:'⛪',type:'religious'},
-      {name:'Maa Kali Mandir',lat:26.80,lng:84.50,d:'Kali',icon:'⛪',type:'religious'},
-      {name:'Shiv Mandir',lat:26.82,lng:84.50,d:'Shiva',icon:'⛪',type:'religious'},
-      {name:'Ram Janaki',lat:26.81,lng:84.49,d:'Rama',icon:'⛪',type:'religious'},
-      {name:'Nara Devi',lat:26.80,lng:84.49,d:'Temple',icon:'⛪',type:'religious'},
-      {name:'Gauri Shankar',lat:26.79,lng:84.48,d:'Shiva',icon:'⛪',type:'religious'},
-      {name:'Govt Hospital',lat:26.80,lng:84.50,d:'Hospital',icon:'🏥',type:'healthcare'},
-      {name:'Bettiah College',lat:26.81,lng:84.51,d:'College',icon:'🎓',type:'education'},
-      {name:'Mission Park',lat:26.80,lng:84.51,d:'Park',icon:'🌳',type:'nature'},
-      {name:'Maharani Park',lat:26.82,lng:84.50,d:'Park',icon:'🌳',type:'nature'},
-      {name:'Railway Station',lat:26.81,lng:84.50,d:'Station',icon:'🚂',type:'infrastructure'},
-      {name:'Bus Stand',lat:26.81,lng:84.49,d:'Bus',icon:'🚌',type:'infrastructure'},
-      {name:'Bettiah Fort',lat:26.80,lng:84.50,d:'Fort',icon:'🏰',type:'historical'},
-      {name:'Vrindavan Ashram',lat:26.79,lng:84.48,d:'Ashram',icon:'🙏',type:'religious'},
-      {name:'Roop Vatika',lat:26.80,lng:84.51,d:'Garden',icon:'🌸',type:'nature'},
-      {name:'Chandrawati',lat:26.78,lng:84.48,d:'River',icon:'💧',type:'nature'},
-      {name:'Burhi Gandak',lat:26.75,lng:84.45,d:'River',icon:'💧',type:'nature'},
-      {name:'Triveni',lat:26.81,lng:84.50,d:'Rivers',icon:'💧',type:'nature'},
-      {name:'Saryaya Temple',lat:26.80,lng:84.53,d:'36 crore',icon:'⛪',type:'religious'},
-      {name:'Lauria Araraj',lat:26.70,lng:84.38,d:'Pillar',icon:'📍',type:'historical'},
-      {name:'Nandangarh',lat:26.66,lng:84.37,d:'Buddhist',icon:'🗿',type:'archaeological'},
-      {name:'Museum',lat:26.80,lng:84.50,d:'Museum',icon:'🏛️',type:'education'},
-      {name:'Market Square',lat:26.80,lng:84.50,d:'Market',icon:'🏪',type:'commerce'},
-      {name:'Textile Market',lat:26.81,lng:84.49,d:'Clothes',icon:'👕',type:'commerce'},
-      {name:'Fruit Market',lat:26.81,lng:84.50,d:'Fruits',icon:'🍏',type:'commerce'},
-      {name:'Spice Market',lat:26.80,lng:84.49,d:'Spices',icon:'🌶️',type:'commerce'},
-      {name:'Government School',lat:26.80,lng:84.50,d:'School',icon:'🎓',type:'education'},
-      {name:'Medical College',lat:26.82,lng:84.51,d:'College',icon:'🎓',type:'education'},
-      {name:'Industrial Area',lat:26.75,lng:84.55,d:'Factory',icon:'🏭',type:'infrastructure'},
-      {name:'Civic Center',lat:26.81,lng:84.49,d:'Center',icon:'🏛️',type:'admin'},
-      {name:'Police Station',lat:26.80,lng:84.50,d:'Police',icon:'👮',type:'admin'},
-      {name:'Fire Station',lat:26.81,lng:84.50,d:'Fire',icon:'🚒',type:'admin'},
-      {name:'Post Office',lat:26.80,lng:84.49,d:'Post',icon:'📮',type:'admin'},
-      {name:'Bank',lat:26.81,lng:84.50,d:'Bank',icon:'🏦',type:'admin'},
-      {name:'Vet Hospital',lat:26.79,lng:84.50,d:'Vet',icon:'🐕',type:'healthcare'},
-      {name:'Pharmacy',lat:26.80,lng:84.50,d:'Medicine',icon:'🏪',type:'commerce'}
+      {name:'Bettiah Town Center',lat:26.80229,lng:84.50311,d:'City Center',icon:'🏛️',type:'admin'},
+      {name:'Bettiah Raj Palace',lat:26.80456,lng:84.49876,d:'Historic Palace',icon:'🏰',type:'heritage'},
+      {name:'Kali Bagh Temple',lat:26.80789,lng:84.50456,d:'Religious Site',icon:'⛪',type:'religious'},
+      {name:'District Hospital',lat:26.80012,lng:84.51123,d:'Medical Facility',icon:'🏥',type:'healthcare'},
+      {name:'Bettiah Railway Station',lat:26.79567,lng:84.51234,d:'Transport Hub',icon:'🚂',type:'infrastructure'},
+      {name:'Bettiah Bus Stand',lat:26.80234,lng:84.48956,d:'Bus Terminal',icon:'🚌',type:'infrastructure'},
+      {name:'District Collectorate',lat:26.80567,lng:84.50789,d:'Government Office',icon:'🏢',type:'admin'},
+      {name:'MJK College',lat:26.79234,lng:84.49123,d:'Educational Institution',icon:'🎓',type:'education'},
+      {name:'Bettiah Market',lat:26.80678,lng:84.50234,d:'Commercial Hub',icon:'🏪',type:'commerce'},
+      {name:'Triveni Ghat',lat:26.80123,lng:84.51567,d:'River Confluence',icon:'💧',type:'nature'},
+      {name:'Shahid Smarak',lat:26.81234,lng:84.50678,d:'War Memorial',icon:'🇮🇳',type:'heritage'},
+      {name:'Police Station',lat:26.80345,lng:84.50567,d:'Law Enforcement',icon:'👮',type:'admin'},
+      {name:'Fire Station',lat:26.80456,lng:84.51234,d:'Emergency Services',icon:'🚒',type:'admin'},
+      {name:'Post Office',lat:26.80567,lng:84.49876,d:'Postal Services',icon:'📮',type:'admin'},
+      {name:'State Bank of India',lat:26.80678,lng:84.50345,d:'Banking',icon:'🏦',type:'commerce'},
+      {name:'Bhitiharwa Ashram',lat:26.79456,lng:84.48765,d:'Historical Ashram',icon:'🙏',type:'heritage'},
+      {name:'Community Health Center',lat:26.79234,lng:84.50123,d:'Health Services',icon:'🏥',type:'healthcare'},
+      {name:'Government School',lat:26.80012,lng:84.49456,d:'Primary Education',icon:'🎓',type:'education'},
+      {name:'Maharani Park',lat:26.81456,lng:84.49876,d:'Public Garden',icon:'🌳',type:'nature'},
+      {name:'Church',lat:26.80789,lng:84.48234,d:'Religious Building',icon:'✝️',type:'religious'},
+      {name:'Masjid',lat:26.79876,lng:84.51456,d:'Islamic Center',icon:'🕌',type:'religious'},
+      {name:'Veterinary Hospital',lat:26.81012,lng:84.50234,d:'Animal Care',icon:'🐕',type:'healthcare'},
+      {name:'Agriculture Office',lat:26.79567,lng:84.49234,d:'Farming Support',icon:'🌾',type:'agriculture'},
+      {name:'Industrial Area',lat:26.78234,lng:84.51789,d:'Manufacturing Zone',icon:'🏭',type:'infrastructure'},
+      {name:'Shivpur',lat:26.81678,lng:84.50567,d:'Residential Area',icon:'🏠',type:'nature'}
     ];
 
     let mcg = L.markerClusterGroup({ maxClusterRadius: 60 });
@@ -192,7 +153,7 @@
     });
     map.addLayer(mcg);
 
-    L.circle([26.8039, 84.5022], {
+    L.circle([26.80229, 84.50311], {
       color: '#3498db',
       fillColor: '#3498db',
       fillOpacity: 0.1,
