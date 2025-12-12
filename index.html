@@ -1,170 +1,219 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bettiah Interactive Map - Leaflet & OpenStreetMap</title>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f0f0f0;
-        }
-        #map {
-            height: 100vh;
-            width: 100%;
-        }
-        .info-box {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: white;
-            padding: 15px 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            z-index: 1000;
-            max-width: 300px;
-        }
-        .title {
-            font-size: 18px;
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 10px;
-        }
-        .subtitle {
-            font-size: 13px;
-            color: #666;
-            line-height: 1.4;
-        }
-        .header {
-            position: fixed;
-            top: 10px;
-            left: 10px;
-            background: white;
-            padding: 15px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            z-index: 1000;
-            max-width: 350px;
-        }
-        .header h1 {
-            color: #2c3e50;
-            font-size: 20px;
-            margin-bottom: 5px;
-        }
-        .header p {
-            color: #666;
-            font-size: 12px;
-            margin: 3px 0;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bettiah Interactive Map - Leaflet & OpenStreetMap</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet-control-layers-inline@1.0.0/lib/leaflet-control-layers-inline.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f0f0f0;
+    }
+    #map {
+      height: 100vh;
+      width: 100%;
+      position: relative;
+    }
+    .info-box {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: white;
+      padding: 15px 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      z-index: 1000;
+      max-width: 300px;
+    }
+    .title {
+      font-size: 18px;
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 10px;
+    }
+    .subtitle {
+      font-size: 13px;
+      color: #666;
+      line-height: 1.4;
+    }
+    .header {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      z-index: 1000;
+      max-width: 350px;
+    }
+    .header h1 {
+      color: #2c3e50;
+      font-size: 20px;
+      margin-bottom: 5px;
+    }
+    .header p {
+      color: #666;
+      font-size: 12px;
+      margin: 3px 0;
+    }
+    .layer-control {
+      position: fixed;
+      top: 180px;
+      left: 10px;
+      background: white;
+      padding: 10px 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      z-index: 1000;
+    }
+    .layer-control label {
+      display: block;
+      margin: 8px 0;
+      cursor: pointer;
+      font-size: 13px;
+    }
+    .layer-control input {
+      margin-right: 8px;
+      cursor: pointer;
+    }
+    .layer-title {
+      font-weight: bold;
+      color: #2c3e50;
+      margin-bottom: 5px;
+      font-size: 13px;
+    }
+  </style>
 </head>
 <body>
-    <div id="map"></div>
-    
-    <div class="header">
-        <h1>Bettiah Interactive Map</h1>
-        <p>📍 Location: West Champaran District, Bihar, India</p>
-        <p>🔍 Coordinates: 26.8039° N, 84.5022° E</p>
-        <p>Built with Leaflet & OpenStreetMap</p>
-    </div>
-    
-    <div class="info-box">
-        <div class="title">About Bettiah</div>
-        <div class="subtitle">
-            Bettiah is a town and administrative headquarters of West Champaran district in Bihar. Known for agricultural production and historical significance.
-        </div>
-    </div>
+  <div id="map"></div>
+  
+  <div class="header">
+    <h1>Bettiah Interactive Map</h1>
+    <p>📍 Location: West Champaran District, Bihar, India</p>
+    <p>🔍 Coordinates: 26.8039° N, 84.5022° E</p>
+    <p>Built with Leaflet & OpenStreetMap</p>
+  </div>
 
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-      <script>
-        // Initialize the map centered on Bettiah
-        const map = L.map('map').setView([26.8039, 84.5022], 13);
-        
-        // Add OpenStreetMap tiles
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-            maxZoom: 19,
-            minZoom: 2
-        }).addTo(map);
-        
-        // Define markers for key locations in Bettiah
-        const locations = [
-            {
-                name: 'Bettiah Town Center',
-                lat: 26.8039,
-                lng: 84.5022,
-                description: 'Administrative headquarters of West Champaran',
-                icon: '🏛️'
-            },
-            {
-                name: 'Bettiah Raj Palace',
-                lat: 26.8050,
-                lng: 84.5010,
-                description: 'Historical palace with cultural significance',
-                icon: '🏰'
-            },
-            {
-                name: 'Triveni Ghat',
-                lat: 26.8080,
-                lng: 84.4990,
-                description: 'Confluence of rivers, pilgrimage site',
-                icon: '🕉️'
-            },
-            {
-                name: 'Agricultural Hub',
-                lat: 26.7980,
-                lng: 84.5100,
-                description: 'Major agricultural production area',
-                icon: '🌾'
-            },
-            {
-                name: 'Bettiah Market',
-                lat: 26.8020,
-                lng: 84.5040,
-                description: 'Traditional market for local goods',
-                icon: '🏪'
-            }
-        ];
-        
-        // Add markers to the map
-        locations.forEach(location => {
-            const marker = L.marker([location.lat, location.lng]).addTo(map);
-            marker.bindPopup(`
-                <div style="width: 250px;">
-                    <h3 style="margin: 0 0 8px 0; color: #2c3e50;">${location.icon} ${location.name}</h3>
-                    <p style="margin: 0; color: #666; font-size: 13px;">${location.description}</p>
-                    <p style="margin: 5px 0 0 0; color: #999; font-size: 11px;">Lat: ${location.lat.toFixed(4)}, Lng: ${location.lng.toFixed(4)}</p>
-                </div>
-            `);
-        });
-        
-        // Add a circle to show Bettiah area
-        L.circle([26.8039, 84.5022], {
-            color: '#3498db',
-            fillColor: '#3498db',
-            fillOpacity: 0.1,
-            radius: 5000,
-            weight: 2
-        }).addTo(map).bindPopup('Bettiah Urban Area (5km radius)');
-        
-        // Add custom controls
-        const info = L.control({position: 'topleft'});
-        info.onAdd = function(map) {
-            this._div = L.DomUtil.create('div', 'info');
-            this._div.innerHTML = '<h4 style="margin: 0; padding: 5px; background: #3498db; color: white; border-radius: 4px 4px 0 0;">Map Controls</h4><p style="padding: 10px; margin: 0; background: white; border-radius: 0 0 4px 4px; font-size: 12px;">Zoom in/out using buttons or scroll wheel. Click markers for more info. Drag to pan.</p>';
-            return this._div;
-        };
-        info.addTo(map);
-        
-        // Resize map on window resize
-        window.addEventListener('resize', () => {
-            map.invalidateSize();
-        });
-  </script></body>
+  <div class="layer-control">
+    <div class="layer-title">📡 Map Layers</div>
+    <label><input type="radio" name="layer" value="osm" checked> Street Map</label>
+    <label><input type="radio" name="layer" value="satellite"> Satellite View</label>
+  </div>
+  
+  <div class="info-box">
+    <div class="title">About Bettiah</div>
+    <div class="subtitle">
+      Bettiah is a town and administrative headquarters of West Champaran district in Bihar. Known for agricultural production, historical heritage, and its role in India's independence movement (Champaran Satyagraha).
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    // Initialize the map centered on Bettiah
+    const map = L.map('map').setView([26.8039, 84.5022], 13);
+    
+    // Define tile layers
+    const osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      maxZoom: 19,
+      minZoom: 2
+    });
+    
+    const satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+      attribution: 'Tiles &copy; Esri',
+      maxZoom: 19,
+      minZoom: 2
+    });
+    
+    // Add default layer
+    osmLayer.addTo(map);
+    
+    // Layer switcher
+    document.querySelectorAll('input[name="layer"]').forEach(radio => {
+      radio.addEventListener('change', (e) => {
+        if (e.target.value === 'satellite') {
+          map.removeLayer(osmLayer);
+          satelliteLayer.addTo(map);
+        } else {
+          map.removeLayer(satelliteLayer);
+          osmLayer.addTo(map);
+        }
+      });
+    });
+    
+    // Define comprehensive markers for Bettiah locations
+    const locations = [
+      { name: 'Bettiah Town Center', lat: 26.8039, lng: 84.5022, description: 'Administrative headquarters of West Champaran', icon: '🏛️', type: 'admin' },
+      { name: 'Bettiah Raj Palace', lat: 26.8050, lng: 84.5010, description: 'Historic palace built 1627 AD, architectural marvel of Mughal era', icon: '🏰', type: 'heritage' },
+      { name: 'Triveni Ghat', lat: 26.8080, lng: 84.4990, description: 'Confluence of Gandak, Panchanand & Sonaha rivers, pilgrimage site', icon: '🕉️', type: 'religious' },
+      { name: 'Agricultural Hub', lat: 26.7980, lng: 84.5100, description: 'Major agricultural production area for wheat & sugarcane', icon: '🌾', type: 'agriculture' },
+      { name: 'Bettiah Market', lat: 26.8020, lng: 84.5040, description: 'Traditional market for local goods & commercial center', icon: '🏪', type: 'commerce' },
+      { name: 'Bhitiharwa Ashram', lat: 26.75, lng: 84.48, description: 'Historic ashram where Mahatma Gandhi stayed during Champaran Satyagraha', icon: '🙏', type: 'heritage' },
+      { name: 'Kalibagh Temple', lat: 26.81, lng: 84.49, description: 'Historic temple built 400 years ago (1614 AD) by royal family', icon: '⛪', type: 'religious' },
+      { name: 'Raj Deorhi (Palace Complex)', lat: 26.805, lng: 84.500, description: 'Historic palace complex with clock tower, former residence of Maharaja', icon: '🏛️', type: 'heritage' },
+      { name: 'District Collectorate', lat: 26.803, lng: 84.502, description: 'Government administrative office', icon: '🏢', type: 'admin' },
+      { name: 'Sagar Pokhra', lat: 26.82, lng: 84.50, description: 'Beautiful lake and scenic park, bird sanctuary', icon: '🦆', type: 'nature' },
+      { name: 'Uttarwari Pokhara', lat: 26.815, lng: 84.505, description: 'Historic pond in northern part of Bettiah', icon: '💧', type: 'nature' },
+      { name: 'Saraiya Man Lake', lat: 26.795, lng: 84.515, description: 'Beautiful lake 6km from town, famous for bird watching', icon: '🌊', type: 'nature' },
+      { name: 'Christian Quarters', lat: 26.808, lng: 84.498, description: 'Historic Christian colony established by Italian Capuchin priests (1740)', icon: '✝️', type: 'heritage' },
+      { name: 'Badi Masjid (Jangi Masjid)', lat: 26.810, lng: 84.505, description: 'Historic mosque, tallest building of Bettiah', icon: '🕌', type: 'religious' },
+      { name: 'MJK College Pokhara', lat: 26.800, lng: 84.510, description: 'Educational institution and scenic pond area', icon: '🎓', type: 'education' },
+      { name: 'Saheed Smarak (Martyr Memorial)', lat: 26.825, lng: 84.500, description: 'Memorial dedicated to freedom fighters', icon: '🇮🇳', type: 'heritage' },
+      { name: 'Valmiki Nagar Dam', lat: 26.68, lng: 84.45, description: 'Gandak Project dam 60km away, hydroelectric power plant & tourist spot', icon: '🏗️', type: 'infrastructure' },
+      { name: 'Udaypur Wildlife Sanctuary', lat: 26.72, lng: 84.40, description: 'Wildlife sanctuary near Bettiah for nature lovers', icon: '🦁', type: 'wildlife' },
+      { name: 'Hajarimal Dharmshala', lat: 26.805, lng: 84.515, description: 'Religious guest house and community center', icon: '🏘️', type: 'religious' },
+      { name: 'District Hospital', lat: 26.804, lng: 84.508, description: 'Government medical facility serving West Champaran', icon: '🏥', type: 'healthcare' }
+    ];
+    
+    // Add markers to the map
+    locations.forEach(location => {
+      const marker = L.marker([location.lat, location.lng], {
+        title: location.name
+      }).addTo(map);
+      
+      marker.bindPopup(`
+        <div style="width: 280px; font-family: Arial, sans-serif;">
+          <h3 style="margin: 0 0 8px 0; color: #2c3e50; font-size: 15px;">${location.icon} ${location.name}</h3>
+          <p style="margin: 0 0 8px 0; color: #555; font-size: 13px;">${location.description}</p>
+          <p style="margin: 0 0 5px 0; color: #888; font-size: 11px;">
+            <strong>Type:</strong> ${location.type.charAt(0).toUpperCase() + location.type.slice(1)}
+          </p>
+          <p style="margin: 0; color: #999; font-size: 11px;">
+            <strong>Coordinates:</strong> ${location.lat.toFixed(4)}°N, ${location.lng.toFixed(4)}°E
+          </p>
+        </div>
+      `);
+    });
+    
+    // Add a circle to show Bettiah urban area
+    L.circle([26.8039, 84.5022], {
+      color: '#3498db',
+      fillColor: '#3498db',
+      fillOpacity: 0.1,
+      radius: 5000,
+      weight: 2
+    }).addTo(map).bindPopup('Bettiah Urban Area (5km radius)');
+    
+    // Add custom controls/info panel
+    const info = L.control({position: 'topleft'});
+    info.onAdd = function(map) {
+      this._div = L.DomUtil.create('div', 'info');
+      this._div.innerHTML = '<h4 style="margin: 0; padding: 5px; background: #3498db; color: white; border-radius: 4px 4px 0 0;">🗺️ Map Controls</h4><p style="padding: 10px; margin: 0; background: white; border-radius: 0 0 4px 4px; font-size: 12px;">Zoom: +/- buttons or scroll | Pan: Click & drag | Markers: Click for details | Layers: Choose above</p>';
+      return this._div;
+    };
+    
+    // Handle window resize
+    window.addEventListener('resize', () => {
+      map.invalidateSize();
+    });
+  </script>
+</body>
 </html>
