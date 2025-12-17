@@ -3,3 +3,7 @@ An interactive web map of Bettiah built with Leaflet and OpenStreetMap. Displays
 
 ## YOLO Achievement ✅
 Unlocking YOLO achievement on Dec 17, 2025!
+
+
+## Pair Extraordinaire Achievement
+Collaboration with co-authors on Dec 17, 2025!
